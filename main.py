@@ -27,10 +27,10 @@ def extract_video_details(url):
 
     result_list = []
     video_blocks = soup.find_all('div', class_='thumb-list__item')
-    print(f"Found {len(video_blocks)} video blocks.")  # Debugging: Number of video blocks found
+#    print(f"Found {len(video_blocks)} video blocks.")  # Debugging: Number of video blocks found
 
     for index, block in enumerate(video_blocks):
-        print(f"Processing video block {index + 1}/{len(video_blocks)}")  # Debugging: Processing status
+     #   print(f"Processing video block {index + 1}/{len(video_blocks)}")  # Debugging: Processing status
         
         thumb_tag = block.find('img')
         video_link_tag = block.find('a', class_='video-thumb__image-container')
@@ -40,7 +40,7 @@ def extract_video_details(url):
 
         # Debugging: Verify tags found
         if not all([thumb_tag, video_link_tag, title_tag, duration_tag, author_tag]):
-            print(f"Skipping incomplete video block {index + 1}")
+        #    print(f"Skipping incomplete video block {index + 1}")
             continue
 
         thumb_url = thumb_tag['src']
