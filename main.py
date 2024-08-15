@@ -6,7 +6,7 @@ import json
 
 # Function to parse the response and extract data
 def parse_response(page_number):
-    url = f"https://xhamster2.com/{page_number}"
+    url = f"https://ro.xhamster2.com/{page_number}"
     response = requests.get(url)
     
     # Check if the request was successful
