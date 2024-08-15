@@ -48,7 +48,7 @@ def extract_video_details(url):
 
 # Example usage:
 page_number = 1
-url = f'https://xhamster.com/{page_number}'
+url = f'https://xhamster.com/search/anal?page=3'
 
 result = extract_video_details(url)
 print("Final Result:", result)  # Debugging: Final result output
