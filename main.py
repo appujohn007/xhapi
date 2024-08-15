@@ -1,78 +1,65 @@
-import requests
+import aiohttp
 from bs4 import BeautifulSoup
-import json
 
-# Function to parse the response and extract data
-def parse_response(page_number):
-    url = f"https://ro.xhamster2.com/{page_number}"
-    print(f"Fetching URL: {url}")
-    
-    response = requests.get(url)
-    
-    # Check if the request was successful
-    if response.status_code != 200:
-        print(f"Failed to retrieve page {page_number}, status code: {response.status_code}")
-        return None
-    
-    print(f"Page {page_number} fetched successfully, parsing content...")
-    soup = BeautifulSoup(response.content, 'html.parser')
-    videos = []
+async def fetch_page(session, url):
+    print(f"Fetching URL: {url}")  # Debugging: URL being fetched
+    async with session.get(url) as response:
+        if response.status != 200:
+            print(f"Failed to fetch URL: {url} - Status code: {response.status}")
+        else:
+            print(f"Successfully fetched URL: {url}")  # Debugging: Successful fetch
+        return await response.text()
 
-    # Updated video block selection based on the HTML structure you provided
-    video_blocks = soup.find_all("li", class_="thumb-list-mobile-item")
-    print(f"Found {len(video_blocks)} video blocks.")
+async def extract_video_details(url):
+    async with aiohttp.ClientSession() as session:
+        page_content = await fetch_page(session, url)
+        print("Parsing HTML content...")  # Debugging: Parsing status
+        soup = BeautifulSoup(page_content, 'html.parser')
 
-    for index, video_block in enumerate(video_blocks):
-        video_data = {}
+        result_list = []
+        video_blocks = soup.find_all('li', class_='thumb-list-mobile-item')
+        print(f"Found {len(video_blocks)} video blocks.")  # Debugging: Number of video blocks found
 
-        # Extracting thumb image URL
-        thumb_img = video_block.find("img")
-        if thumb_img and thumb_img.get("src"):
-            video_data['thumb'] = thumb_img['src']
-            print(f"Video {index + 1}: Thumb URL found - {thumb_img['src']}")
+        for index, block in enumerate(video_blocks):
+            print(f"Processing video block {index + 1}/{len(video_blocks)}")  # Debugging: Processing status
+            
+            thumb_tag = block.find('img')
+            video_link_tag = block.find('a', class_='thumb-image-container')
+            title_tag = block.find('a', class_='mobile-video-thumb__name')
+            duration_tag = block.find('div', class_='time').find('time')
+            author_tag = block.find('a', class_='video-uploader__name')
 
-        # Extracting video URL (preview video)
-        video_tag = video_block.find("a", class_="thumb-image-container")
-        if video_tag and video_tag.get("data-previewvideo-fallback"):
-            video_data['vid'] = video_tag['data-previewvideo-fallback']
-            print(f"Video {index + 1}: Video URL found - {video_tag['data-previewvideo-fallback']}")
+            # Debugging: Verify tags found
+            if not all([thumb_tag, video_link_tag, title_tag, duration_tag, author_tag]):
+                print(f"Skipping incomplete video block {index + 1}")
+                continue
 
-        # Extracting title
-        title_tag = video_block.find("a", class_="mobile-video-thumb__name")
-        if title_tag:
-            video_data['title'] = title_tag.text.strip()
-            print(f"Video {index + 1}: Title found - {title_tag.text.strip()}")
+            thumb_url = thumb_tag['src']
+            video_url = video_link_tag['data-previewvideo']
+            title = title_tag.text.strip()
+            duration = duration_tag.text.strip()
+            author = author_tag.text.strip()
 
-        # Extracting duration
-        duration_tag = video_block.find("time")
-        if duration_tag:
-            video_data['duration'] = duration_tag.text.strip()
-            print(f"Video {index + 1}: Duration found - {duration_tag.text.strip()}")
+            print(f"Video {index + 1} details:\nThumb: {thumb_url}\nVideo: {video_url}\nTitle: {title}\nDuration: {duration}\nAuthor: {author}")  # Debugging: Video details
+            
+            video_info = {
+                'thumb': thumb_url,
+                'vid': video_url,
+                'title': title,
+                'duration': duration,
+                'author': author
+            }
 
-        # Extracting author
-        author_tag = video_block.find("a", class_="video-uploader__name")
-        if author_tag:
-            video_data['author'] = author_tag.text.strip()
-            print(f"Video {index + 1}: Author found - {author_tag.text.strip()}")
+            result_list.append(video_info)
 
-        # Add the extracted video data to the list
-        if video_data:
-            videos.append(video_data)
-            print(f"Video {index + 1} added to the list.")
+        print(f"Extracted {len(result_list)} videos in total.")  # Debugging: Total videos extracted
+        return result_list
 
-    return videos
+# Example usage:
+import asyncio
 
+page_number = 1
+url = f'https://amster2.com/{page_number}'
 
-# Function to get the list of videos for a page
-def get_videos_from_page(page_number):
-    print(f"Getting videos for page {page_number}")
-    return parse_response(page_number)
-
-
-page_number = 1 
-videos = get_videos_from_page(page_number)
-print(f"Result: {videos}")
-
-# Uncomment the following lines to print the videos in JSON format
-# for video in videos:
-#     print(json.dumps(video, indent=4))
+result = asyncio.run(extract_video_details(url))
+print("Final Result:", result)  # Debugging: Final result output
