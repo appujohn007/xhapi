@@ -26,17 +26,17 @@ def extract_video_details(url):
     soup = BeautifulSoup(page_content, 'html.parser')
 
     result_list = []
-    video_blocks = soup.find_all('li', class_='thumb-list-mobile-item')
+    video_blocks = soup.find_all('div', class_='thumb-list__item')
     print(f"Found {len(video_blocks)} video blocks.")  # Debugging: Number of video blocks found
 
     for index, block in enumerate(video_blocks):
         print(f"Processing video block {index + 1}/{len(video_blocks)}")  # Debugging: Processing status
         
         thumb_tag = block.find('img')
-        video_link_tag = block.find('a', class_='thumb-image-container')
-        title_tag = block.find('a', class_='mobile-video-thumb__name')
-        duration_tag = block.find('div', class_='time').find('time')
-        author_tag = block.find('a', class_='video-uploader__name')
+        video_link_tag = block.find('a', class_='video-thumb__image-container')
+        title_tag = block.find('a', class_='video-thumb-info__name')
+        duration_tag = block.find('div', class_='thumb-image-container__duration')
+        author_tag = block.find('div', class_='video-uploader-data')
 
         # Debugging: Verify tags found
         if not all([thumb_tag, video_link_tag, title_tag, duration_tag, author_tag]):
@@ -66,7 +66,7 @@ def extract_video_details(url):
 
 # Example usage:
 page_number = 1
-url = f'https://xhamster.com/{page_number}'
+url = f'https://amster2.com/{page_number}'
 
 result = extract_video_details(url)
 print("Final Result:", result)  # Debugging: Final result output
