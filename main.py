@@ -49,7 +49,7 @@ def extract_video_details(url):
         duration = duration_tag.text.strip()
         author = author_tag.text.strip()
 
-        print(f"Video {index + 1} details:\nThumb: {thumb_url}\nVideo: {video_url}\nTitle: {title}\nDuration: {duration}\nAuthor: {author}")  # Debugging: Video details
+     #   print(f"Video {index + 1} details:\nThumb: {thumb_url}\nVideo: {video_url}\nTitle: {title}\nDuration: {duration}\nAuthor: {author}")  # Debugging: Video details
         
         video_info = {
             'thumb': thumb_url,
