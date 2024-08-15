@@ -1,29 +1,29 @@
 import requests
 from bs4 import BeautifulSoup
 
-def fetch_page(url):
-    print(f"Fetching URL: {url}")  # Debugging: URL being fetched
+#def fetch_page(url):
+   # print(f"Fetching URL: {url}")  # Debugging: URL being fetched
+    
+#        return None
+#    else:
+#        print(f"Successfully fetched URL: {url}")  # Debugging: Successful fetch
+        
+        # Save the HTML content to a .txt file
+     #   with open('fetched_page.txt', 'w', encoding='utf-8') as file:
+     #       file.write(response.text)
+         #   print("HTML content saved to 'fetched_page.txt'")  # Debugging: File save status
+
+    #    return response.text
+
+def extract_video_details(url):
+  #  page_content = fetch_page(url)
     response = requests.get(url)
     if response.status_code != 200:
         print(f"Failed to fetch URL: {url} - Status code: {response.status_code}")
-        return None
-    else:
-        print(f"Successfully fetched URL: {url}")  # Debugging: Successful fetch
-        
-        # Save the HTML content to a .txt file
-        with open('fetched_page.txt', 'w', encoding='utf-8') as file:
-            file.write(response.text)
-            print("HTML content saved to 'fetched_page.txt'")  # Debugging: File save status
-
-        return response.text
-
-def extract_video_details(url):
-    page_content = fetch_page(url)
-    if page_content is None:
-        return []
+    
 
     print("Parsing HTML content...")  # Debugging: Parsing status
-    soup = BeautifulSoup(page_content, 'html.parser')
+    soup = BeautifulSoup(response.text, 'html.parser')
 
     result_list = []
     video_blocks = soup.find_all('div', class_='thumb-list__item')
