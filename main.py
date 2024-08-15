@@ -9,6 +9,12 @@ def fetch_page(url):
         return None
     else:
         print(f"Successfully fetched URL: {url}")  # Debugging: Successful fetch
+        
+        # Save the HTML content to a .txt file
+        with open('fetched_page.txt', 'w', encoding='utf-8') as file:
+            file.write(response.text)
+            print("HTML content saved to 'fetched_page.txt'")  # Debugging: File save status
+
         return response.text
 
 def extract_video_details(url):
