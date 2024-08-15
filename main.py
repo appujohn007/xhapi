@@ -55,7 +55,7 @@ def parse_response(page_number):
 
 # Function to get the list of videos for a page
 def get_videos_from_page(page_number):
-    parse_response(html_content)
+    parse_response(page_number)
     return
 
 
