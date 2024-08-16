@@ -47,5 +47,7 @@ def fetch_video_details(query, page):
 query = "bdsm"
 page = 1
 videos = fetch_video_details(query, page)
-for video in videos:
-    print(videos)
+print(videos) 
+
+#for video in videos:
+    
