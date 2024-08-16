@@ -48,4 +48,4 @@ query = "bdsm"
 page = 1
 videos = fetch_video_details(query, page)
 for video in videos:
-    print(video)
+    print(videos)
