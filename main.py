@@ -38,7 +38,7 @@ def fetch_video_details(query, page):
                     'views': views
                 })
 
-        return video_list
+        return response.content
     else:
         print("Failed to retrieve the webpage.")
         return None
