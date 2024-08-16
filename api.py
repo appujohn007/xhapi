@@ -44,7 +44,7 @@ def fetch_video_details(query, page):
         return None
 
 # Example usage:
-query = "example_query"
+query = "bdsm"
 page = 1
 videos = fetch_video_details(query, page)
 for video in videos:
